@@ -28,15 +28,18 @@ services:
     networks:
       forum_network:
 
-  mysql:
-    image: percona:5.7.26
+mysql:
+    image: mysql:5.7
+    container_name: forum_mysql
     volumes:
       - './storage/mysql:/var/lib/mysql'
     environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: laravel
-      MYSQL_DATABASE: forum_db
+      - 'MYSQL_ROOT_PASSWORD=secret'
+      - 'MYSQL_USER=laravel'
+      - 'MYSQL_PASSWORD=laravel'
+      - 'MYSQL_DATABASE=forum_db'
+    ports:
+      - '33061:3306'
     networks:
       forum_network:
 
