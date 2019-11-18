@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+  nginx:
+    build:
+      context: ./
+      dockerfile: services/nginx/Dockerfile
+    container_name: forum_nginx
+    volumes:
+      - '../:/var/www'
+    ports:
+      - '8080:80'
+    networks:
+      forum_network:
+        # ipv4_address: 172.22.0.80
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: services/php-fpm/Dockerfile
+    container_name: forum_php-fpm
+    volumes:
+      - '../:/var/www'
+      - './services/php-fpm:/usr/local/etc/php'
+    environment:
+      XDEBUG_CONFIG: "remote_host=172.22.0.1 remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker_srv"
+    networks:
+      forum_network:
+
+  mysql:
+    image: percona:5.7.26
+    volumes:
+      - './storage/mysql:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+      MYSQL_DATABASE: forum_db
+    networks:
+      forum_network:
+
+  node:
+    image: node:8.16-alpine
+    volumes:
+      - '../:/var/www'
+    working_dir: '/var/www'
+    networks:
+      forum_network:
+
+networks:
+  forum_network:
+    name: forum_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.0.0/16

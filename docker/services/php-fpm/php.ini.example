@@ -1,0 +1,14 @@
+max_execution_time = 1000
+max_input_time = 1000
+memory_limit = -1
+extension=pdo_pgsql.so
+extension=pdo_mysql.so
+extension=bcmath.so
+extension=zip.so
+extension=gd.so
+extension=sodium.so
+zend_extension=xdebug.so
+; Maximum allowed size for uploaded files.
+upload_max_filesize = 100M
+; Must be greater than or equal to upload_max_filesize
+post_max_size = 100M
