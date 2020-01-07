@@ -36,9 +36,9 @@ RUN echo "Install composer" \
     && wget https://getcomposer.org/installer -O - -q \
     | php -- --install-dir=/bin --filename=composer --quiet
 
-RUN groupadd -r andrey \
-    && useradd -r andrey -g andrey
-
-USER andrey
+ARG USER=root
+RUN groupadd -g 1000 ${USER} || echo "Group already exists."
+RUN useradd -u 1000 -ms /bin/bash -g ${USER} ${USER} || echo "User already exists."
+USER ${USER}
 
 WORKDIR /var/www
