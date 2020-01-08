@@ -28,5 +28,13 @@ use Illuminate\Support\Carbon;
  */
 class Thread extends Model
 {
-    //
+    /**
+     * Получение URL для конкретного поста
+     *
+     * @return string
+     */
+    public function path(): string
+    {
+        return '/threads/' . $this->id;
+    }
 }
