@@ -24,3 +24,9 @@ migrate:
 
 part:
 	docker exec forum_php-fpm php artisan $(c)
+
+npm-install:
+	docker-compose -f docker/docker-compose.yml run node npm install
+
+npm-dev:
+	docker-compose -f docker/docker-compose.yml run node npm run dev
