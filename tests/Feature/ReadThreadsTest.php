@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -10,7 +9,7 @@ class ReadThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @var Thread */
+    /** @var \App\Thread */
     protected $thread;
 
     /**

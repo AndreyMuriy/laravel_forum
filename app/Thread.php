@@ -32,6 +32,8 @@ use Illuminate\Support\Carbon;
  */
 class Thread extends Model
 {
+    protected $guarded = [];
+
     /**
      * Получение URL для конкретного поста
      *
@@ -60,5 +62,15 @@ class Thread extends Model
     public function creator()
     {
         return $this->belongsTo('App\User', 'user_id');
+    }
+
+    /**
+     * Добавление комментария к посту
+     *
+     * @param $reply
+     */
+    public function addReply($reply)
+    {
+        $this->replies()->create($reply);
     }
 }

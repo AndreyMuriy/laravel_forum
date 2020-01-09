@@ -29,6 +29,8 @@ use Illuminate\Support\Carbon;
  */
 class Reply extends Model
 {
+    protected $guarded = [];
+
     /**
      * Автор комментария
      *
