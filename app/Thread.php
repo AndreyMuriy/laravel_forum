@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 
 /**
  * App\Thread
@@ -16,8 +16,9 @@ use Illuminate\Database\Eloquent\Collection;
  * @property string $body
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Reply[] $replies
+ * @property-read Collection|Reply[] $replies
  * @property-read int|null $replies_count
+ * @property-read User $owner
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
@@ -49,5 +50,15 @@ class Thread extends Model
     public function replies()
     {
         return $this->hasMany('App\Reply');
+    }
+
+    /**
+     * Реляция для автора
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner()
+    {
+        return $this->belongsTo('App\User', 'user_id');
     }
 }
