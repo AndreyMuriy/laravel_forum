@@ -28,5 +28,13 @@ use Illuminate\Support\Carbon;
  */
 class Reply extends Model
 {
-    //
+    /**
+     * Автор комментария
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

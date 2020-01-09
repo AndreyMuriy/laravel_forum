@@ -37,4 +37,14 @@ class Thread extends Model
     {
         return '/threads/' . $this->id;
     }
+
+    /**
+     * Реляция для комментариев
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function replies()
+    {
+        return $this->hasMany('App\Reply');
+    }
 }
