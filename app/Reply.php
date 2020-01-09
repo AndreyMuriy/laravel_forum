@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property string $body
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read \App\User $owner
  * @method static Builder|Reply newModelQuery()
  * @method static Builder|Reply newQuery()
  * @method static Builder|Reply query()
