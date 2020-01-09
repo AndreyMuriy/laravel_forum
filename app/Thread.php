@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection|Reply[] $replies
  * @property-read int|null $replies_count
- * @property-read User $owner
+ * @property-read User $creator
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
@@ -57,7 +57,7 @@ class Thread extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function owner()
+    public function creator()
     {
         return $this->belongsTo('App\User', 'user_id');
     }

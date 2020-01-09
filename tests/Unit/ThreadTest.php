@@ -30,8 +30,8 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    public function a_thread_has_owner()
+    public function a_thread_has_creator()
     {
-        $this->assertInstanceOf(User::class, $this->thread->owner);
+        $this->assertInstanceOf(User::class, $this->thread->creator);
     }
 }
