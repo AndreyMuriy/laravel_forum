@@ -32,6 +32,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread whereUpdatedAt($value)
  * @method static Builder|Thread whereUserId($value)
  * @mixin \Eloquent
+ * @property int $channel_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
  */
 class Thread extends Model
 {
@@ -45,7 +47,7 @@ class Thread extends Model
      */
     public function path(string $subPath = null): string
     {
-        return '/threads/' . $this->id . ($subPath ? '/' . $subPath : '');
+        return '/threads/' . $this->channel->slug . '/' . $this->id . ($subPath ? '/' . $subPath : '');
     }
 
     /**
