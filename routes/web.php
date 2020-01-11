@@ -8,7 +8,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/threads', 'ThreadController@index')->name('threads');
-Route::get('/threads/{thread}', 'ThreadController@show');
+// Threads
+Route::resource('/threads', 'ThreadController');
 Route::post('/threads/{thread}/replies', 'ReplyController@store');
-Route::post('/threads', 'ThreadController@store');

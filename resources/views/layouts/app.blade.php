@@ -34,7 +34,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('threads') }}">All Threads</a>
+                            <a class="nav-link" href="{{ '/threads' }}">All Threads</a>
                         </li>
                     </ul>
 
