@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Http\Controllers;
 
@@ -56,10 +57,11 @@ class ThreadController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param string $channelSlug
      * @param int $threadId
      * @return \Illuminate\Http\Response
      */
-    public function show(int $threadId)
+    public function show(string $channelSlug, int $threadId)
     {
         $thread = Thread::with('replies.owner')->find($threadId);
         return view('threads.show', compact('thread'));

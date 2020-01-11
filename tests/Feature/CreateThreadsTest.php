@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -26,8 +27,8 @@ class CreateThreadsTest extends TestCase
     {
         $this->signIn();
 
-        /** @var \App\Thread $thread */
-        $thread = make('App\Thread');
+        /** @var Thread $thread */
+        $thread = create(Thread::class);
         $this->post('/threads', $thread->toArray());
 
         $this->get($thread->path())

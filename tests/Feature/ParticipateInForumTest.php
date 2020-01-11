@@ -12,14 +12,9 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function unauthenticated_users_may_not_add_replies()
     {
-        $this->expectException('\Illuminate\Auth\AuthenticationException');
-
-        /** @var \App\Thread $thread */
-        $thread = factory('App\Thread')->create();
-        /** @var \App\Reply $reply */
-        $reply = factory('App\Reply')->make();
-
-        $this->post($thread->path('replies'), $reply->toArray());
+        $this->withExceptionHandling()
+            ->post('/threads/some-channel/1/replies', [])
+            ->assertRedirect('/login');
 
     }
 
