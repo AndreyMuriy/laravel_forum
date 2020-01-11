@@ -21,19 +21,19 @@ class ThreadTest extends TestCase
         parent::setUp();
 
         /** @var Thread $thread */
-        $this->thread = factory('App\Thread')->create();
-    }
-
-    /** @test */
-    public function a_thread_has_replies()
-    {
-        $this->assertInstanceOf(Collection::class, $this->thread->replies);
+        $this->thread = create('App\Thread');
     }
 
     /** @test */
     public function a_thread_has_creator()
     {
         $this->assertInstanceOf(User::class, $this->thread->creator);
+    }
+
+    /** @test */
+    public function a_thread_has_replies()
+    {
+        $this->assertInstanceOf(Collection::class, $this->thread->replies);
     }
 
     /** @test */
@@ -45,5 +45,11 @@ class ThreadTest extends TestCase
         ]);
 
         $this->assertCount(1, $this->thread->replies);
+    }
+
+    /** @test */
+    public function a_thread_belongs_to_a_channel()
+    {
+        $this->assertInstanceOf('\App\Channel', $this->thread->channel);
     }
 }
