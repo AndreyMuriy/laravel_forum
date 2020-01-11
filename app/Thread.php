@@ -37,11 +37,12 @@ class Thread extends Model
     /**
      * Получение URL для конкретного поста
      *
+     * @param string|null $subPath
      * @return string
      */
-    public function path(): string
+    public function path(string $subPath = null): string
     {
-        return '/threads/' . $this->id;
+        return '/threads/' . $this->id . ($subPath ? '/' . $subPath : '');
     }
 
     /**
