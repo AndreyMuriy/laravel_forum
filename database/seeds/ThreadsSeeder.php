@@ -11,8 +11,10 @@ class ThreadsSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Thread', 50)->create()->each(function ($thread) {
-            factory('App\Reply', 10)->create(['thread_id' => $thread->id]);
+        factory('App\Channel', 5)->create()->each(function ($channel) {
+            factory('App\Thread', 10)->create(['channel_id' => $channel->id])->each(function ($thread) {
+                factory('App\Reply', 10)->create(['thread_id' => $thread->id]);
+            });
         });
     }
 }
