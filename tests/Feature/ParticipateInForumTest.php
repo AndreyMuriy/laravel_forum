@@ -22,9 +22,9 @@ class ParticipateInForumTest extends TestCase
     {
         $this->withExceptionHandling()->signIn();
         /** @var \App\Thread $thread */
-        $thread = factory('App\Thread')->create();
+        $thread = create('App\Thread');
         /** @var \App\Reply $reply */
-        $reply = factory('App\Reply')->make();
+        $reply = make('App\Reply');
         $this->post($thread->path('replies'), $reply->toArray());
 
         $this->get($thread->path())
@@ -36,10 +36,22 @@ class ParticipateInForumTest extends TestCase
     {
         $this->withExceptionHandling()->signIn();
         /** @var \App\Thread $thread */
-        $thread = factory('App\Thread')->create();
+        $thread = create('App\Thread');
         /** @var \App\Reply $reply */
-        $reply = factory('App\Reply')->make(['body' => null]);
+        $reply = make('App\Reply', ['body' => null]);
         $this->post($thread->path('replies'), $reply->toArray())
             ->assertSessionHasErrors('body');
+    }
+
+    /** @test */
+    public function a_user_can_filter_threads_according_to_a_channel()
+    {
+        $channel = create('App\Channel');
+        $threadInChannel = create('App\Thread', ['channel_id' => $channel->id]);
+        $threadNotInChannel = create('App\Thread');
+
+        $this->get('/threads/' . $channel->slug)
+            ->assertSee($threadInChannel->title)
+            ->assertDontSee($threadNotInChannel->title);
     }
 }
