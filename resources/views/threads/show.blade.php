@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card bg-dark text-white">
                     <div class="card-header">
                         <a href="#">{{ $thread->creator->name }}</a> posted:
                         {{ $thread->title }}
@@ -12,6 +12,10 @@
 
                     <div class="card-body">
                         {{ $thread->body }}
+                    </div>
+
+                    <div class="card-footer">
+                        Posted {{ $thread->created_at->diffForHumans() }}
                     </div>
                 </div>
             </div>

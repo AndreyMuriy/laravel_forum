@@ -15,13 +15,12 @@ class ParticipateInForumTest extends TestCase
         $this->withExceptionHandling()
             ->post('/threads/some-channel/1/replies', [])
             ->assertRedirect('/login');
-
     }
 
     /** @test */
     public function an_authenticated_user_may_participate_in_forum_threads()
     {
-        $this->be($user = factory('App\User')->create());
+        $this->withExceptionHandling()->signIn();
         /** @var \App\Thread $thread */
         $thread = factory('App\Thread')->create();
         /** @var \App\Reply $reply */
@@ -30,5 +29,17 @@ class ParticipateInForumTest extends TestCase
 
         $this->get($thread->path())
             ->assertSee($reply->body);
+    }
+
+    /** @test */
+    public function a_reply_requires_a_body()
+    {
+        $this->withExceptionHandling()->signIn();
+        /** @var \App\Thread $thread */
+        $thread = factory('App\Thread')->create();
+        /** @var \App\Reply $reply */
+        $reply = factory('App\Reply')->make(['body' => null]);
+        $this->post($thread->path('replies'), $reply->toArray())
+            ->assertSessionHasErrors('body');
     }
 }
