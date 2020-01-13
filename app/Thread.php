@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Filters\ThreadFilters;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property string $title
  * @property string $body
+ * @property int $channel_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Reply[] $replies
@@ -31,9 +33,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread whereTitle($value)
  * @method static Builder|Thread whereUpdatedAt($value)
  * @method static Builder|Thread whereUserId($value)
+ * @method static Builder|Thread whereChannelId($value)
+ * @method static Builder|Thread filter(ThreadFilters $filters)
  * @mixin \Eloquent
- * @property int $channel_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
  */
 class Thread extends Model
 {
@@ -88,5 +90,17 @@ class Thread extends Model
     public function addReply($reply): void
     {
         $this->replies()->create($reply);
+    }
+
+    /**
+     * Скоуп для фильтров
+     *
+     * @param Builder $builder
+     * @param $filters
+     * @return Builder
+     */
+    public function scopeFilter(Builder $builder, ThreadFilters $filters): Builder
+    {
+        return $filters->apply($builder);
     }
 }
