@@ -19,9 +19,13 @@
                     </div>
                 </div>
 
-                @foreach($thread->replies as $reply)
+                @foreach($replies as $reply)
                     @include('threads.reply')
                 @endforeach
+
+                <div class="mt-3">
+                    {{ $replies->links() }}
+                </div>
 
                 @if (auth()->check())
                     <div class="card mt-3">

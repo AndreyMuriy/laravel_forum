@@ -11,8 +11,9 @@ class AppServiceProvider extends ServiceProvider
      * Массив представлений, для которых не нужен массив channel
      * @var array
      */
-    protected $excludes = [
-        'threads.reply'
+    protected $includes = [
+        'layouts.app',
+        'threads.create',
     ];
 
     /**
@@ -32,10 +33,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \View::composer('*', function ($view) {
-            if (!in_array($view->getName(), $this->excludes)) {
-                $view->with('channels', Channel::all());
-            }
+        \View::composer($this->includes, function ($view) {
+            $view->with('channels', Channel::all());
         });
     }
 }

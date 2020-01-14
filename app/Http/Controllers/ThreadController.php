@@ -75,8 +75,12 @@ class ThreadController extends Controller
      */
     public function show(string $channelSlug, int $threadId)
     {
+        /** @var Thread $thread */
         $thread = Thread::with('replies.owner')->find($threadId);
-        return view('threads.show', compact('thread'));
+        return view('threads.show', [
+            'thread' => $thread,
+            'replies' => $thread->replies()->with('owner')->paginate(5)
+        ]);
     }
 
     /**
