@@ -42,6 +42,18 @@ class Thread extends Model
     protected $guarded = [];
 
     /**
+     * @inheritdoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function (Builder $builder) {
+            $builder->withCount('replies');
+        });
+    }
+
+    /**
      * Получение URL для конкретного поста
      *
      * @param string|null $subPath

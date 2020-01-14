@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row">
             <div class="col-md-8">
                 <div class="card bg-dark text-white">
                     <div class="card-header">
@@ -18,20 +18,12 @@
                         Posted {{ $thread->created_at->diffForHumans() }}
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-8">
                 @foreach($thread->replies as $reply)
                     @include('threads.reply')
                 @endforeach
-            </div>
-        </div>
 
-        @if (auth()->check())
-            <div class="row justify-content-center">
-                <div class="col-md-8">
+                @if (auth()->check())
                     <div class="card mt-3">
                         <div class="card-body">
                             <form method="POST" action="{{ $thread->path() . '/replies' }}">
@@ -43,11 +35,23 @@
                             </form>
                         </div>
                     </div>
+                @else
+                    <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion</p>
+                @endif
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Thread meta</h4>
+                    </div>
+                    <div class="card-body">
+                        This thread was published {{ $thread->created_at->diffForHumans() }} by
+                        <a href="">{{ $thread->creator->name }}</a>, and currently
+                        has {{ $thread->replies_count }} {{ \Str::plural('comment', $thread->replies_count) }}
+                    </div>
                 </div>
             </div>
-            @else
-            <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion</p>
-        @endif
-
+        </div>
     </div>
 @endsection
