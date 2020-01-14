@@ -8,6 +8,14 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
+     * Массив представлений, для которых не нужен массив channel
+     * @var array
+     */
+    protected $excludes = [
+        'threads.reply'
+    ];
+
+    /**
      * Register any application services.
      *
      * @return void
@@ -25,7 +33,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \View::composer('*', function ($view) {
-            $view->with('channels', Channel::all());
+            if (!in_array($view->getName(), $this->excludes)) {
+                $view->with('channels', Channel::all());
+            }
         });
     }
 }
