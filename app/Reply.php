@@ -16,6 +16,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read \App\User $owner
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Favorite[] $favorites
+ * @property-read int|null $favorites_count
  * @method static Builder|Reply newModelQuery()
  * @method static Builder|Reply newQuery()
  * @method static Builder|Reply query()
@@ -39,5 +41,27 @@ class Reply extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Реляция для лайков
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function favorites()
+    {
+        return $this->morphMany('App\Favorite', 'favorites');
+    }
+
+    /**
+     * Выставление лайка для сущности
+     */
+    public function favorite()
+    {
+        $attributes = ['user_id' => auth()->id()];
+
+        if (!$this->favorites()->where($attributes)->exists()) {
+            $this->favorites()->create($attributes);
+        }
     }
 }
