@@ -39,7 +39,14 @@ use Illuminate\Support\Carbon;
  */
 class Thread extends Model
 {
+    /**
+     * @var array
+     */
     protected $guarded = [];
+    /**
+     * @var array
+     */
+    protected $with = ['creator', 'channel'];
 
     /**
      * @inheritdoc
@@ -72,8 +79,7 @@ class Thread extends Model
     public function replies(): HasMany
     {
         return $this->hasMany('App\Reply')
-            ->withCount('favorites')
-            ->with('owner');
+            ->withCount('favorites');
     }
 
     /**

@@ -11,13 +11,13 @@
                     <form method="POST" action="{{ '/replies/' . $reply->id . '/favorites' }}">
                         {{ csrf_field() }}
                         <button type="submit" class="btn btn-outline-primary" {{ $reply->isFavorited() ? 'disabled' : '' }}>
-                            {{ $reply->favoritesount }} {{ Str::plural('Favorite', $reply->favorites_count) }}
+                            {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
                         </button>
                     </form>
                 </div>
             @else
                 <span class="badge badge-primary">
-                    {{ $reply->favoritesCount }} {{ Str::plural('Favorite', $reply->favoritesCount) }}
+                    {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
                 </span>
             @endif
         </div>

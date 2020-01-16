@@ -2,10 +2,10 @@
 
 namespace App;
 
+use App\Traits\Favoritable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -30,10 +30,21 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Reply whereUpdatedAt($value)
  * @method static Builder|Reply whereUserId($value)
  * @mixin \Eloquent
+ * @mixin Favoritable
  */
 class Reply extends Model
 {
+    use Favoritable;
+
+    /**
+     * @var array
+     */
     protected $guarded = [];
+
+    /**
+     * @var array
+     */
+    protected $with = ['owner', 'favorites'];
 
     /**
      * Автор комментария
@@ -44,37 +55,5 @@ class Reply extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    /**
-     * Реляция для лайков
-     *
-     * @return MorphMany
-     */
-    public function favorites(): MorphMany
-    {
-        return $this->morphMany('App\Favorite', 'favorites');
-    }
-
-    /**
-     * Выставление лайка для сущности
-     */
-    public function favorite(): void
-    {
-        $attributes = ['user_id' => auth()->id()];
-
-        if (!$this->favorites()->where($attributes)->exists()) {
-            $this->favorites()->create($attributes);
-        }
-    }
-
-    /**
-     * Признак того, что пользователь уже лайкнул комментарий
-     *
-     * @return bool
-     */
-    public function isFavorited(): bool
-    {
-        $exists = $this->favorites()->where('user_id', auth()->id())->exists();
-        return $exists;
-    }
 }
+
