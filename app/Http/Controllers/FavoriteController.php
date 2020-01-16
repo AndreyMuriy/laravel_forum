@@ -18,9 +18,11 @@ class FavoriteController extends Controller
      * Сохранение лайков
      *
      * @param Reply $reply
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Reply $reply)
     {
         $reply->favorite();
+        return back();
     }
 }

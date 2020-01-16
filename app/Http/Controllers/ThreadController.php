@@ -74,13 +74,11 @@ class ThreadController extends Controller
      * Display the specified resource.
      *
      * @param string $channelSlug
-     * @param int $threadId
+     * @param Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function show(string $channelSlug, int $threadId)
+    public function show(string $channelSlug, Thread $thread)
     {
-        /** @var Thread $thread */
-        $thread = Thread::with('replies.owner')->find($threadId);
         return view('threads.show', [
             'thread' => $thread,
             'replies' => $thread->replies()->with('owner')->paginate(5)

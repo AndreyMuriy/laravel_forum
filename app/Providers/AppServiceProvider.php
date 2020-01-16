@@ -4,18 +4,11 @@ namespace App\Providers;
 
 use App\Channel;
 use Illuminate\Support\ServiceProvider;
+use View;
+use Cache;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Массив представлений, для которых не нужен массив channel
-     * @var array
-     */
-    protected $includes = [
-        'layouts.app',
-        'threads.create',
-    ];
-
     /**
      * Register any application services.
      *
@@ -33,8 +26,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \View::composer($this->includes, function ($view) {
-            $view->with('channels', Channel::all());
+        View::composer('*', function ($view) {
+            $channels = Cache::rememberForever('channels', function () {
+                return Channel::all();
+            });
+            $view->with('channels', $channels);
         });
     }
 }
