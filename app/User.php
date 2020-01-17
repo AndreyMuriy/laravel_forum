@@ -65,4 +65,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Получение наименования поля для ключа в роутах
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
+
+    /**
+     * Реляция для потоков
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function threads()
+    {
+        return $this->hasMany(Thread::class)->latest( );
+    }
 }
