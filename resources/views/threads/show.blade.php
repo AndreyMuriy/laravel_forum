@@ -4,22 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <div class="card bg-dark text-white">
-                    <div class="card-header">
-                        <a href="{{ route('profile', $thread->creator) }}">
-                            {{ $thread->creator->name }}
-                        </a> posted:
-                        {{ $thread->title }}
-                    </div>
-
-                    <div class="card-body">
-                        {{ $thread->body }}
-                    </div>
-
-                    <div class="card-footer">
-                        Posted {{ $thread->created_at->diffForHumans() }}
-                    </div>
-                </div>
+                @include('threads.thread')
 
                 @foreach($replies as $reply)
                     @include('threads.reply')
@@ -47,7 +32,7 @@
             </div>
 
             <div class="col-md-4">
-                <div class="card">
+                <div class="card mt-3">
                     <div class="card-header">
                         <h4>Thread meta</h4>
                     </div>
