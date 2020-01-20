@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Filters\ThreadFilters;
+use App\Traits\RecordsActivities;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,8 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $replies_count
  * @property-read User $creator
  * @property-read Channel $channel
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activities
+ * @property-read int|null $activities_count
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
@@ -39,6 +42,8 @@ use Illuminate\Support\Carbon;
  */
 class Thread extends Model
 {
+    use RecordsActivities;
+
     /**
      * @var array
      */

@@ -94,7 +94,6 @@ class CreateThreadsTest extends TestCase
         $this->assertTrue(true);
     }
 
-
     /**
      * Публикация потока
      *

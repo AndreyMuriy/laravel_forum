@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Traits\Favoritable;
+use App\Traits\RecordsActivities;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,8 @@ use Illuminate\Support\Carbon;
  * @property-read \App\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Favorite[] $favorites
  * @property-read int|null $favorites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activities
+ * @property-read int|null $activities_count
  * @method static Builder|Reply newModelQuery()
  * @method static Builder|Reply newQuery()
  * @method static Builder|Reply query()
@@ -34,7 +37,7 @@ use Illuminate\Support\Carbon;
  */
 class Reply extends Model
 {
-    use Favoritable;
+    use Favoritable, RecordsActivities;
 
     /**
      * @var array
