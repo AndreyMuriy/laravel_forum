@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $favorites_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read \App\Thread $thread
  * @method static Builder|Reply newModelQuery()
  * @method static Builder|Reply newQuery()
  * @method static Builder|Reply query()
