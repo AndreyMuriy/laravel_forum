@@ -58,5 +58,15 @@ class Reply extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * Статья комментария
+     *
+     * @return BelongsTo
+     */
+    public function thread()
+    {
+        return $this->belongsTo(Thread::class);
+    }
 }
 

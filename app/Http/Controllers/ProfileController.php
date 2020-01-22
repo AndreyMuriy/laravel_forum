@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProfileController extends Controller
 {
     /**
-     * Страница конкретного профайла пользователя
+     * Страница профайла определенного пользователя
      *
      * @param User $user
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -16,7 +17,25 @@ class ProfileController extends Controller
     {
         return view('profiles.show', [
             'profileUser' => $user,
-            'threads' => $user->threads()->paginate(1)
+            'activities' => $this->getActivities($user),
         ]);
+    }
+
+    /**
+     * Получение последних активностей пользователя
+     *
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function getActivities(User $user): Collection
+    {
+        return $user->activity()
+            ->latest()
+            ->with('subject')
+            ->take(50)
+            ->get()
+            ->groupBy(function ($activity) {
+                return $activity->created_at->format('Y-m-d');
+            });
     }
 }
