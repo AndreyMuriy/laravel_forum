@@ -45,4 +45,23 @@ class Activity extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Получение активностей за последнее время
+     *
+     * @param User $user
+     * @param $take
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
+    public static function feed(User $user, $take = 50)
+    {
+        return static::where('user_id', $user->id)
+            ->latest()
+            ->with('subject')
+            ->take($take)
+            ->get()
+            ->groupBy(function ($activity) {
+                return $activity->created_at->format('Y-m-d');
+            });
+    }
 }

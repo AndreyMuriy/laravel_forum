@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
 use App\User;
-use Illuminate\Database\Eloquent\Collection;
 
 class ProfileController extends Controller
 {
@@ -17,25 +17,7 @@ class ProfileController extends Controller
     {
         return view('profiles.show', [
             'profileUser' => $user,
-            'activities' => $this->getActivities($user),
+            'activities' => Activity::feed($user),
         ]);
-    }
-
-    /**
-     * Получение последних активностей пользователя
-     *
-     * @param User $user
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    protected function getActivities(User $user): Collection
-    {
-        return $user->activity()
-            ->latest()
-            ->with('subject')
-            ->take(50)
-            ->get()
-            ->groupBy(function ($activity) {
-                return $activity->created_at->format('Y-m-d');
-            });
     }
 }
