@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -43,14 +44,14 @@ class CreateThreadsTest extends TestCase
         $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
     }
-    
+
     /** @test */
     public function a_thread_requires_a_body()
     {
         $this->publishThread(['body' => null])
             ->assertSessionHasErrors('body');
     }
-    
+
     /** @test */
     public function a_thread_requires_a_valid_channel()
     {
@@ -86,6 +87,8 @@ class CreateThreadsTest extends TestCase
         $response->assertStatus(204);
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        $this->assertCount(0, Activity::all());
     }
 
     /** @test */
