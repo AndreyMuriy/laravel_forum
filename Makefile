@@ -16,6 +16,9 @@ bash-php:
 composer-install:
 	docker exec forum_php-fpm composer install
 
+npm-install:
+	docker exec forum_node npm install
+
 key-generate:
 	docker exec forum_php-fpm php artisan key:generate
 

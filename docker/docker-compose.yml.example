@@ -46,7 +46,7 @@ mysql:
   node:
     image: node:8.16-alpine
     volumes:
-      - '../:/var/www'
+      - '../:/var/www:cached'
     working_dir: '/var/www'
     networks:
       forum_network:
