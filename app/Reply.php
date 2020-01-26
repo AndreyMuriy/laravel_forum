@@ -69,5 +69,15 @@ class Reply extends Model
     {
         return $this->belongsTo(Thread::class);
     }
-}
 
+    /**
+     * Получение URL для доступа по ссылке
+     *
+     * @param string $subPath
+     * @return string
+     */
+    public function path(string $subPath = null)
+    {
+        return $this->thread->path($subPath) . "#reply-{$this->id}";
+    }
+}
