@@ -33,7 +33,7 @@ class Favorite extends Model
     use RecordsActivities;
 
     protected $fillable = [
-        'user_id', 'favorites_id', 'favorites_type', 'created_at', 'updated_at'
+        'user_id', 'favorited_id', 'favorited_type', 'created_at', 'updated_at'
     ];
 
     /**
@@ -41,7 +41,7 @@ class Favorite extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function favorites()
+    public function favorited()
     {
         return $this->morphTo();
     }
