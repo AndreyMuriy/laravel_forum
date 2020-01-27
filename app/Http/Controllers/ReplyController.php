@@ -39,6 +39,22 @@ class ReplyController extends Controller
     }
 
     /**
+     * ОБновление текста комментария
+     *
+     * @param Reply $reply
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function update(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        $this->validate(request(), ['body' => 'required']);
+
+        $reply->update(request(['body']));
+    }
+
+    /**
      * Удаление комментария
      *
      * @param Reply $reply
