@@ -28,6 +28,9 @@ part:
 npm-install:
 	docker-compose -f docker/docker-compose.yml run node npm install
 
+npm-install-package:
+	docker-compose -f docker/docker-compose.yml run node npm install --save ${p}
+
 npm-dev:
 	docker-compose -f docker/docker-compose.yml run node npm run dev
 
