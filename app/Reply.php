@@ -51,6 +51,11 @@ class Reply extends Model
     protected $with = ['owner', 'favorites'];
 
     /**
+     * @var array
+     */
+    protected $appends = ['favoritesCount', 'isFavorited'];
+
+    /**
      * Автор комментария
      *
      * @return BelongsTo

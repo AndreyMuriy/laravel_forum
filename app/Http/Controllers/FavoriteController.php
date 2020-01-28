@@ -15,14 +15,22 @@ class FavoriteController extends Controller
     }
 
     /**
-     * Сохранение лайков
+     * Сохранение лайка
      *
      * @param Reply $reply
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Reply $reply)
     {
         $reply->favorite();
-        return back();
+    }
+
+    /**
+     * Удаление поставленного лайка
+     *
+     * @param Reply $reply
+     */
+    public function destroy(Reply $reply)
+    {
+        $reply->unfavorite();
     }
 }

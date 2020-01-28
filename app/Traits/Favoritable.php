@@ -36,13 +36,33 @@ trait Favoritable
     }
 
     /**
+     * Убирание лайка для сущности
+     */
+    public function unfavorite(): void
+    {
+        $attributes = ['user_id' => auth()->id()];
+
+        $this->favorites()->where($attributes)->delete();
+    }
+
+    /**
      * Признак того, что пользователь уже лайкнул сущность
      *
      * @return bool
      */
     public function isFavorited(): bool
     {
-        return !! $this->favorites->where('user_id', auth()->id())->count();
+        return !!$this->favorites->where('user_id', auth()->id())->count();
+    }
+
+    /**
+     * Динамический аттрибут isFavorited
+     *
+     * @return bool
+     */
+    public function getIsFavoritedAttribute(): bool
+    {
+        return $this->isFavorited();
     }
 
     /**
@@ -50,7 +70,7 @@ trait Favoritable
      *
      * @return int
      */
-    public function getFavoritesCountAttribute()
+    public function getFavoritesCountAttribute(): int
     {
         return $this->favorites->count();
     }

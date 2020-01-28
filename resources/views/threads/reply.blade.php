@@ -8,15 +8,16 @@
                     </a> said {{ $reply->created_at->diffForHumans() }}...
                 </h5>
                 @if (auth()->check())
-                    <div>
-                        <form method="POST" action="{{ '/replies/' . $reply->id . '/favorites' }}">
-                            {{ csrf_field() }}
-                            <button type="submit"
-                                    class="btn btn-outline-primary" {{ $reply->isFavorited() ? 'disabled' : '' }}>
-                                {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
-                            </button>
-                        </form>
-                    </div>
+                    <favorite :reply="{{ $reply }}"></favorite>
+                    {{--<div>--}}
+                        {{--<form method="POST" action="{{ '/replies/' . $reply->id . '/favorites' }}">--}}
+                            {{--{{ csrf_field() }}--}}
+                            {{--<button type="submit"--}}
+                                    {{--class="btn btn-outline-primary" {{ $reply->isFavorited() ? 'disabled' : '' }}>--}}
+                                {{--{{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}--}}
+                            {{--</button>--}}
+                        {{--</form>--}}
+                    {{--</div>--}}
                 @else
                     <span class="badge badge-primary">
                     {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
