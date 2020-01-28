@@ -11,7 +11,7 @@
                     <favorite :reply="{{ $reply }}"></favorite>
                 @else
                     <span class="badge badge-primary">
-                    {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favorites_count) }}
+                    {{ $reply->favorites_count }} {{ Str::plural('Favorite', $reply->favoritesCount) }}
                 </span>
                 @endif
             </div>
