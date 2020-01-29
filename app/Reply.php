@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read \App\Thread $thread
+ * @property-read bool $is_favorited
  * @method static Builder|Reply newModelQuery()
  * @method static Builder|Reply newQuery()
  * @method static Builder|Reply query()
