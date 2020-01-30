@@ -114,10 +114,12 @@ class Thread extends Model
      * Добавление комментария к посту
      *
      * @param $reply
+     *
+     * @return Model
      */
-    public function addReply($reply): void
+    public function addReply($reply)
     {
-        $this->replies()->create($reply);
+        return $this->replies()->create($reply);
     }
 
     /**
