@@ -12,6 +12,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/threads', 'ThreadController')->except('show');
 Route::get('/threads/{channel}', 'ThreadController@index');
 Route::get('/threads/{channel}/{thread}', 'ThreadController@show');
+Route::get('/threads/{channel}/{thread}/replies', 'ReplyController@index');
 Route::post('/threads/{channel}/{thread}/replies', 'ReplyController@store');
 Route::delete('/threads/{channel}/{thread}', 'ThreadController@destroy');
 Route::post('/replies/{reply}/favorites', 'FavoriteController@store');

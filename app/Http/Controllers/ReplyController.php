@@ -13,9 +13,21 @@ class ReplyController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => 'index']);
     }
 
+    /**
+     * Получение всех связанных комментариев
+     *
+     * @param $channelId
+     * @param Thread $thread
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function index($channelId, Thread $thread)
+    {
+        return $thread->replies()->paginate(5);
+    }
+    
     /**
      * Сохранение комментария поста
      *

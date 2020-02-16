@@ -7,15 +7,7 @@
                 <div class="col-md-8">
                     @include('threads.thread')
 
-                    <replies :data="{{ $thread->replies }}"
-                             @added="repliesCount++"
-                             @removed="repliesCount--">
-                    </replies>
-
-                    <div class="mt-3">
-                        {{ $replies->links() }}
-                    </div>
-
+                    <replies @added="repliesCount++" @removed="repliesCount--"></replies>
                 </div>
 
                 <div class="col-md-4">
