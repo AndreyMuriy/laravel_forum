@@ -57,6 +57,22 @@ class Reply extends Model
     protected $appends = ['favoritesCount', 'isFavorited'];
 
     /**
+     * @inheritdoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (Reply $reply) {
+            $reply->thread->increment('replies_count');
+        });
+
+        static::deleted(function (Reply $reply) {
+            $reply->thread->decrement('replies_count');
+        });
+    }
+
+    /**
      * Автор комментария
      *
      * @return BelongsTo

@@ -12,7 +12,7 @@ class ThreadFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['by', 'popular'];
+    protected $filters = ['by', 'popular', 'unanswered'];
 
     /**
      * Фильтр по автору потока
@@ -35,5 +35,15 @@ class ThreadFilters extends Filters
     {
         $this->builder->getQuery()->orders = [];
         return $this->builder->orderBy('replies_count', 'desc');
+    }
+
+    /**
+     * Фильтр запроса по тем статьям, на которые никто не ответил
+     *
+     * @return Builder
+     */
+    public function unanswered()
+    {
+        return $this->builder->where('replies_count', 0);
     }
 }
