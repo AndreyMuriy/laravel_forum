@@ -107,6 +107,38 @@ class Thread extends Model
     }
 
     /**
+     * Реляция для подписчиков на канал
+     *
+     * @return HasMany
+     */
+    public function subscription(): HasMany
+    {
+        return $this->hasMany(ThreadSubscription::class, 'thread_id');
+    }
+
+    /**
+     * Подписка на канал
+     *
+     * @param int|null $userId
+     */
+    public function subscribe(int $userId = null): void
+    {
+        $this->subscription()->create([
+            'user_id' => $userId ?: auth()->id(),
+        ]);
+    }
+
+    /**
+     * Отписка от канала
+     *
+     * @param int|null $userId
+     */
+    public function unsubscribe(int $userId = null): void
+    {
+        $this->subscription()->where('user_id', $userId ?: auth()->id())->delete();
+    }
+
+    /**
      * Добавление комментария к посту
      *
      * @param $reply
