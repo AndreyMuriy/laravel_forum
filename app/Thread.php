@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $activities_count
  * @property-read Collection|ThreadSubscription[] $subscription
  * @property-read int|null $subscription_count
+ * @property-read bool $is_subscribed_to
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
@@ -51,10 +52,16 @@ class Thread extends Model
      * @var array
      */
     protected $guarded = [];
+
     /**
      * @var array
      */
     protected $with = ['creator', 'channel'];
+
+    /**
+     * @var array
+     */
+    protected $appends = ['is_subscribed_to'];
 
     /**
      * @inheritdoc
@@ -78,6 +85,8 @@ class Thread extends Model
     {
         return '/threads/' . $this->channel->slug . '/' . $this->id . ($subPath ? '/' . $subPath : '');
     }
+
+    /***** RELATIONS *****/
 
     /**
      * Реляция для комментариев
@@ -119,6 +128,36 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class, 'thread_id');
     }
 
+    /***** SCOPES *****/
+
+    /**
+     * Скоуп для фильтров
+     *
+     * @param Builder $builder
+     * @param $filters
+     * @return Builder
+     */
+    public function scopeFilter(Builder $builder, ThreadFilters $filters): Builder
+    {
+        return $filters->apply($builder);
+    }
+
+    /***** CUSTOM ATTRIBUTES *****/
+
+    /**
+     * Признак того, что пользователь подписан на канал
+     *
+     * @return bool
+     */
+    public function getIsSubscribedToAttribute(): bool
+    {
+        return $this->subscription()
+            ->where('user_id', auth()->id())
+            ->exists();
+    }
+
+    /***** METHODS *****/
+
     /**
      * Подписка на канал
      *
@@ -151,17 +190,5 @@ class Thread extends Model
     public function addReply($reply): Reply
     {
         return $this->replies()->create($reply);
-    }
-
-    /**
-     * Скоуп для фильтров
-     *
-     * @param Builder $builder
-     * @param $filters
-     * @return Builder
-     */
-    public function scopeFilter(Builder $builder, ThreadFilters $filters): Builder
-    {
-        return $filters->apply($builder);
     }
 }
