@@ -16,9 +16,15 @@
                             <h4>Thread meta</h4>
                         </div>
                         <div class="card-body">
-                            This thread was published {{ $thread->created_at->diffForHumans() }} by
-                            <a href="">{{ $thread->creator->name }}</a>, and currently
-                            has <span v-text="repliesCount"></span> {{ \Str::plural('comment', $thread->replies_count) }}
+                            <p>
+                                This thread was published {{ $thread->created_at->diffForHumans() }} by
+                                <a href="">{{ $thread->creator->name }}</a>, and currently
+                                has <span
+                                    v-text="repliesCount"></span> {{ \Str::plural('comment', $thread->replies_count) }}
+                            </p>
+                            <p>
+                                <subscribe-button :active="{{ json_encode($thread->is_subscribed_to) }}"></subscribe-button>
+                            </p>
                         </div>
                     </div>
                 </div>
