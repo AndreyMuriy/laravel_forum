@@ -25,8 +25,10 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $replies_count
  * @property-read User $creator
  * @property-read Channel $channel
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activities
+ * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
+ * @property-read Collection|ThreadSubscription[] $subscription
+ * @property-read int|null $subscription_count
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
@@ -38,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread whereUserId($value)
  * @method static Builder|Thread whereChannelId($value)
  * @method static Builder|Thread filter(ThreadFilters $filters)
+ * @method static Builder|Thread whereRepliesCount($value)
  * @mixin \Eloquent
  */
 class Thread extends Model
@@ -145,7 +148,7 @@ class Thread extends Model
      *
      * @return Model
      */
-    public function addReply($reply)
+    public function addReply($reply): Reply
     {
         return $this->replies()->create($reply);
     }
