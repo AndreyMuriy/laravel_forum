@@ -128,6 +128,8 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class, 'thread_id');
     }
 
+
+
     /***** SCOPES *****/
 
     /**
@@ -162,12 +164,14 @@ class Thread extends Model
      * Подписка на канал
      *
      * @param int|null $userId
+     * @return Thread
      */
-    public function subscribe(int $userId = null): void
+    public function subscribe(int $userId = null): Thread
     {
         $this->subscription()->create([
             'user_id' => $userId ?: auth()->id(),
         ]);
+        return $this;
     }
 
     /**
@@ -183,12 +187,21 @@ class Thread extends Model
     /**
      * Добавление комментария к посту
      *
-     * @param $reply
-     *
-     * @return Model
+     * @param $replyData
+     * @return Reply
      */
-    public function addReply($reply): Reply
+    public function addReply($replyData): Reply
     {
-        return $this->replies()->create($reply);
+        /** @var Reply $reply */
+        $reply = $this->replies()->create($replyData);
+
+        $this->subscription
+            ->filter(function (ThreadSubscription $subscription) use ($reply) {
+                return $reply->user_id != $subscription->user_id;
+            })
+            ->each
+            ->notify($reply);
+
+        return $reply;
     }
 }
