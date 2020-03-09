@@ -100,4 +100,16 @@ class ThreadTest extends TestCase
 
         Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
     }
+    
+    /** @test */
+    public function a_thread_can_check_if_the_authenticated_user_has_read_all_replies()
+    {
+        $this->signIn();
+
+        tap(auth()->user(), function (User $user) {
+            $this->assertTrue($this->thread->hasUpdatesFor($user));
+            $user->read($this->thread);
+            $this->assertFalse($this->thread->hasUpdatesFor($user));
+        });
+    }
 }

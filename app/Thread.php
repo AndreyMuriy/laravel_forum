@@ -212,4 +212,17 @@ class Thread extends Model
             ->each
             ->notify($reply);
     }
+
+    /**
+     * Определение, был ли поток изменён после последнего прочтения
+     *
+     * @param User $user
+     * @return bool
+     * @throws \Exception
+     */
+    public function hasUpdatesFor(User $user): bool
+    {
+        $key = $user->visitedThreadCacheKey($this);
+        return $this->updated_at > cache($key);
+    }
 }

@@ -12,7 +12,13 @@
                             <article>
                                 <div class="level">
                                     <h4 class="flex">
-                                        <a href="{{ $thread->path() }}">{{ $thread->title }}</a>
+                                        <a href="{{ $thread->path() }}">
+                                            @if (auth()->check() && $thread->hasUpdatesFor(auth()->user()))
+                                                <strong>{{ $thread->title }}</strong>
+                                            @else
+                                                {{ $thread->title }}
+                                            @endif
+                                        </a>
                                     </h4>
                                     <strong>{{ $thread->replies_count }} {{ Str::plural('comment', $thread->replies_count) }}</strong>
                                 </div>

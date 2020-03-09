@@ -87,7 +87,7 @@ class User extends Authenticatable
      */
     public function threads()
     {
-        return $this->hasMany(Thread::class)->latest( );
+        return $this->hasMany(Thread::class)->latest();
     }
 
     /**
@@ -98,5 +98,30 @@ class User extends Authenticatable
     public function activity()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Запись того, что пользователь прочитал все комментарии текущего потока
+     *
+     * @param Thread $thread
+     * @throws \Exception
+     */
+    public function read(Thread $thread)
+    {
+        cache()->forever(
+            $this->visitedThreadCacheKey($thread),
+            Carbon::now()
+        );
+    }
+
+    /**
+     * Получение ключа кэша, когда пользователь посетил страницу
+     *
+     * @param Thread $thread
+     * @return string
+     */
+    public function visitedThreadCacheKey(Thread $thread): string
+    {
+        return sprintf("users.%s.visits.%s", $this->id, $thread->id);
     }
 }

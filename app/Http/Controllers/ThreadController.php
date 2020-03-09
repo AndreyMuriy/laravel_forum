@@ -80,30 +80,10 @@ class ThreadController extends Controller
      */
     public function show(string $channelSlug, Thread $thread)
     {
+        if (auth()->check()) {
+            auth()->user()->read($thread);
+        }
         return view('threads.show', compact('thread'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Thread $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Thread $thread)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Thread $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Thread $thread)
-    {
-        //
     }
 
     /**
