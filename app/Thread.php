@@ -195,13 +195,21 @@ class Thread extends Model
         /** @var Reply $reply */
         $reply = $this->replies()->create($replyData);
 
-        $this->subscription
-            ->filter(function (ThreadSubscription $subscription) use ($reply) {
-                return $reply->user_id != $subscription->user_id;
-            })
-            ->each
-            ->notify($reply);
+        $this->notifySubscribes($reply);
 
         return $reply;
+    }
+
+    /**
+     * Уведомить подписчиков о событии
+     *
+     * @param Reply $reply
+     */
+    public function notifySubscribes(Reply $reply)
+    {
+        $this->subscription
+            ->where('user_id', '!=', $reply->user_id)
+            ->each
+            ->notify($reply);
     }
 }
