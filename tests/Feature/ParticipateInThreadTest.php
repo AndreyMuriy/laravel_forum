@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ParticipateInForumTest extends TestCase
+class ParticipateInThreadTest extends TestCase
 {
     use DatabaseMigrations;
 

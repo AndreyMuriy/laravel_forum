@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Inspections\Spam;
 use App\Reply;
 use App\Thread;
 
@@ -11,7 +12,7 @@ class ReplyController extends Controller
     /**
      * ReplyController constructor.
      */
-    public function __construct()
+public function __construct()
     {
         $this->middleware('auth', ['except' => 'index']);
     }
@@ -27,20 +28,20 @@ class ReplyController extends Controller
     {
         return $thread->replies()->paginate(5);
     }
-    
+
     /**
      * Сохранение комментария поста
      *
      * @param string $channelSlug
      * @param Thread $thread
+     * @param Spam $spam
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(string $channelSlug, Thread $thread)
+    public function store(string $channelSlug, Thread $thread, Spam $spam)
     {
-        $this->validate(request(), [
-            'body' => 'required',
-        ]);
+        $this->validate(request(), ['body' => 'required']);
+        $spam->detect(request('body'));
 
         $reply = $thread->addReply([
             'user_id' => auth()->id(),

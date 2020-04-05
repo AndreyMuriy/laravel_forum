@@ -24,6 +24,6 @@ class SpamTest extends TestCase
     {
         $spam = new Spam();
         $this->expectException('Exception');
-        $spam->detect('aaaaaaaaaaaa');
+        $spam->detect('Hello world aaaaaaaaaaaa');
     }
 }
