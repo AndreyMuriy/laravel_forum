@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $threads_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activity
  * @property-read int|null $activity_count
+ * @property-read \App\Reply $lastReply
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -98,6 +99,16 @@ class User extends Authenticatable
     public function activity()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Получение последнего комментария для пользователя
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function lastReply()
+    {
+        return $this->hasOne(Reply::class)->latest();
     }
 
     /**

@@ -102,4 +102,14 @@ class Reply extends Model
     {
         return $this->thread->path($subPath) . "#reply-{$this->id}";
     }
+
+    /**
+     * Определение, был ли комментарий опубликован только что
+     *
+     * @return bool
+     */
+    public function wasJustPublished()
+    {
+        return $this->created_at->gt(Carbon::now()->subMinute());
+    }
 }

@@ -4,8 +4,9 @@ namespace App\Rules;
 
 use App\Inspections\Spam;
 use Exception;
+use Illuminate\Contracts\Validation\Rule;
 
-class SpamFree
+class SpamFree implements Rule
 {
     /**
      * Determine if the validation rule passes.
@@ -21,5 +22,15 @@ class SpamFree
         } catch (Exception $exception) {
             return false;
         }
+    }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string|array
+     */
+    public function message()
+    {
+        return 'The :attribute contains spam.';
     }
 }
