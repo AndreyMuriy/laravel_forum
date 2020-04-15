@@ -17,7 +17,8 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
-} catch (e) {}
+} catch (e) {
+}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -47,6 +48,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 window.events = new Vue();
 
-window.flash = function (message) {
-    window.events.$emit('flash', message);
+window.flash = function (message, level = 'success') {
+    window.events.$emit('flash', { message, level });
 };

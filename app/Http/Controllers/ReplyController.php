@@ -1,18 +1,17 @@
 <?php
-/** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Http\Controllers;
 
-use App\Inspections\Spam;
 use App\Reply;
 use App\Thread;
+use Exception;
 
 class ReplyController extends Controller
 {
     /**
      * ReplyController constructor.
      */
-public function __construct()
+    public function __construct()
     {
         $this->middleware('auth', ['except' => 'index']);
     }
@@ -34,41 +33,46 @@ public function __construct()
      *
      * @param string $channelSlug
      * @param Thread $thread
-     * @param Spam $spam
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(string $channelSlug, Thread $thread, Spam $spam)
+    public function store(string $channelSlug, Thread $thread)
     {
-        $this->validate(request(), ['body' => 'required']);
-        $spam->detect(request('body'));
+        try {
+            $this->validate(request(), ['body' => 'required|spamfree']);
 
-        $reply = $thread->addReply([
-            'user_id' => auth()->id(),
-            'body' => request('body'),
-        ]);
-
-        if (request()->expectsJson()) {
-            return $reply->load('owner');
+            $reply = $thread->addReply([
+                'user_id' => auth()->id(),
+                'body' => request('body'),
+            ]);
+        } catch (Exception $exception) {
+            return response(
+                'Sorry, your reply could not be saved at this time.', 422
+            );
         }
 
-        return back()->with('flash', 'Your reply has been left.');
+        return $reply->load('owner');
     }
 
     /**
      * ОБновление текста комментария
      *
      * @param Reply $reply
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
 
-        $this->validate(request(), ['body' => 'required']);
+        try {
+            $this->validate(request(), ['body' => 'required|spamfree']);
+            $reply->update(request(['body']));
+        } catch (Exception $exception) {
+            return response(
+                'Sorry, your reply could not be saved at this time.', 422
+            );
+        }
 
-        $reply->update(request(['body']));
     }
 
     /**
@@ -76,7 +80,7 @@ public function __construct()
      *
      * @param Reply $reply
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Reply $reply)
     {
