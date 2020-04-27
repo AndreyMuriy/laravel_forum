@@ -49,22 +49,16 @@ class ReplyController extends Controller
      * ОБновление текста комментария
      *
      * @param Reply $reply
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
 
-        try {
-            $this->validate(request(), ['body' => 'required|spamfree']);
-            $reply->update(request(['body']));
-        } catch (Exception $exception) {
-            return response(
-                'Sorry, your reply could not be saved at this time.', 422
-            );
-        }
+        $this->validate(request(), ['body' => 'required|spamfree']);
 
+        $reply->update(request(['body']));
     }
 
     /**
