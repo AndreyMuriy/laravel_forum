@@ -65,7 +65,7 @@ class ThreadTest extends TestCase
     public function a_thread_can_be_subscribed_to()
     {
         $this->thread->subscribe($userId = 1);
-        $this->assertEquals(1, $this->thread->subscription()->whereUserId($userId)->count());
+        $this->assertEquals(1, $this->thread->subscriptions()->whereUserId($userId)->count());
     }
 
     /** @test */
@@ -73,7 +73,7 @@ class ThreadTest extends TestCase
     {
         $this->thread->subscribe($userId = 1);
         $this->thread->unsubscribe($userId);
-        $this->assertEquals(0, $this->thread->subscription()->whereUserId($userId)->count());
+        $this->assertEquals(0, $this->thread->subscriptions()->whereUserId($userId)->count());
     }
 
     /** @test */

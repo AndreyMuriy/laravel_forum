@@ -112,4 +112,15 @@ class Reply extends Model
     {
         return $this->created_at->gt(Carbon::now()->subMinute());
     }
+
+    /**
+     * Получение всех упомянутых через @ в комментарии пользователей
+     *
+     * @return array
+     */
+    public function mentionedUsers()
+    {
+        preg_match_all('/\@([\w]+)/', $this->body, $matches);
+        return $matches[1];
+    }
 }

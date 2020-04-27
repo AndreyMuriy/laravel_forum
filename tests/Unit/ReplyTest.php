@@ -13,7 +13,7 @@ class ReplyTest extends TestCase
     /** @test */
     public function it_has_an_owner()
     {
-        $reply = factory('App\Reply')->create();
+        $reply = factory('App\Reply')->make();
         $this->assertInstanceOf('App\User', $reply->owner);
     }
     
@@ -28,5 +28,16 @@ class ReplyTest extends TestCase
         $reply->created_at = Carbon::now()->subMonth();
 
         $this->assertFalse($reply->wasJustPublished());
+    }
+
+    /** @test */
+    public function it_can_detect_all_mentioned_users_in_the_body()
+    {
+        /** @var \App\Reply $reply */
+        $reply = make('App\Reply', [
+            'body' => '@JaneDoe wants to talk to @JohnDoe',
+        ]);
+
+        $this->assertEquals(['JaneDoe', 'JohnDoe'], $reply->mentionedUsers());
     }
 }

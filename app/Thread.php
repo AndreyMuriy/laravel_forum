@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\ThreadReceivedNewReply;
 use App\Filters\ThreadFilters;
 use App\Traits\RecordsActivities;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,7 +28,7 @@ use Illuminate\Support\Carbon;
  * @property-read Channel $channel
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read Collection|ThreadSubscription[] $subscription
+ * @property-read Collection|ThreadSubscription[] $subscriptions
  * @property-read int|null $subscription_count
  * @property-read bool $is_subscribed_to
  * @method static Builder|Thread newModelQuery()
@@ -123,7 +124,7 @@ class Thread extends Model
      *
      * @return HasMany
      */
-    public function subscription(): HasMany
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(ThreadSubscription::class, 'thread_id');
     }
@@ -153,7 +154,7 @@ class Thread extends Model
      */
     public function getIsSubscribedToAttribute(): bool
     {
-        return $this->subscription()
+        return $this->subscriptions()
             ->where('user_id', auth()->id())
             ->exists();
     }
@@ -168,7 +169,7 @@ class Thread extends Model
      */
     public function subscribe(int $userId = null): Thread
     {
-        $this->subscription()->create([
+        $this->subscriptions()->create([
             'user_id' => $userId ?: auth()->id(),
         ]);
         return $this;
@@ -181,7 +182,7 @@ class Thread extends Model
      */
     public function unsubscribe(int $userId = null): void
     {
-        $this->subscription()->where('user_id', $userId ?: auth()->id())->delete();
+        $this->subscriptions()->where('user_id', $userId ?: auth()->id())->delete();
     }
 
     /**
@@ -195,22 +196,9 @@ class Thread extends Model
         /** @var Reply $reply */
         $reply = $this->replies()->create($replyData);
 
-        $this->notifySubscribes($reply);
+        event(new ThreadReceivedNewReply($reply));
 
         return $reply;
-    }
-
-    /**
-     * Уведомить подписчиков о событии
-     *
-     * @param Reply $reply
-     */
-    public function notifySubscribes(Reply $reply)
-    {
-        $this->subscription
-            ->where('user_id', '!=', $reply->user_id)
-            ->each
-            ->notify($reply);
     }
 
     /**
