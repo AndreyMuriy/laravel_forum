@@ -41,6 +41,8 @@ class Reply extends Model
 {
     use Favoritable, RecordsActivities;
 
+    const PATTERN = '/@([\w\-\_]+)/';
+
     /**
      * @var array
      */
@@ -70,6 +72,20 @@ class Reply extends Model
         static::deleted(function (Reply $reply) {
             $reply->thread->decrement('replies_count');
         });
+    }
+
+    /**
+     * Мутатор для заполнения тела комментария
+     *
+     * @param string $body
+     */
+    public function setBodyAttribute($body)
+    {
+        $this->attributes['body'] = preg_replace(
+            self::PATTERN,
+            '<a href="/profiles/$1">$0</a>',
+            $body
+        );
     }
 
     /**
@@ -120,7 +136,7 @@ class Reply extends Model
      */
     public function mentionedUsers()
     {
-        preg_match_all('/\@([\w]+)/', $this->body, $matches);
+        preg_match_all(self::PATTERN, $this->body, $matches);
         return $matches[1];
     }
 }
