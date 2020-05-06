@@ -23,7 +23,7 @@ class ThreadController extends Controller
      *
      * @param Channel $channel
      * @param ThreadFilters $filters
-     * @return Thread|Thread[]|\Illuminate\Contracts\View\Factory|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Channel $channel, ThreadFilters $filters)
     {
@@ -113,7 +113,7 @@ class ThreadController extends Controller
      *
      * @param Channel $channel
      * @param ThreadFilters $filters
-     * @return Thread|Thread[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getThreads(Channel $channel, ThreadFilters $filters)
     {
@@ -123,6 +123,6 @@ class ThreadController extends Controller
             $threads = $threads->where('channel_id', $channel->id);
         }
 
-        return $threads->get();
+        return $threads->paginate(10);
     }
 }
