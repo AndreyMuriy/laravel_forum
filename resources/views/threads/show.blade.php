@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('head')
+    <link rel="stylesheet" href="/css/vendor/jquery.atwho.css">
+@endsection
+
 @section('content')
     <thread-view :data="{{ $thread }}" inline-template>
         <div class="container">
@@ -23,7 +27,8 @@
                                     v-text="repliesCount"></span> {{ \Str::plural('comment', $thread->replies_count) }}
                             </p>
                             <p>
-                                <subscribe-button :active="{{ json_encode($thread->is_subscribed_to) }}"></subscribe-button>
+                                <subscribe-button
+                                    :active="{{ json_encode($thread->is_subscribed_to) }}"></subscribe-button>
                             </p>
                         </div>
                     </div>
