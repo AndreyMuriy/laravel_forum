@@ -6,7 +6,18 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Thread;
+use App\Trending;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class ThreadController extends Controller
 {
@@ -23,9 +34,10 @@ class ThreadController extends Controller
      *
      * @param Channel $channel
      * @param ThreadFilters $filters
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param Trending $trending
+     * @return Application|LengthAwarePaginator|Factory|View
      */
-    public function index(Channel $channel, ThreadFilters $filters)
+    public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
     {
         $threads = $this->getThreads($channel, $filters);
 
@@ -33,13 +45,16 @@ class ThreadController extends Controller
             return $threads;
         }
 
-        return view('threads.index', compact('threads'));
+        return view('threads.index', [
+            'threads' => $threads,
+            'trending' => $trending->get(),
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
     public function create()
     {
@@ -49,9 +64,9 @@ class ThreadController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Request $request
+     * @return Application|RedirectResponse|Redirector
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -77,13 +92,17 @@ class ThreadController extends Controller
      *
      * @param string $channelSlug
      * @param Thread $thread
-     * @return \Illuminate\Http\Response
+     * @param Trending $trending
+     * @return Application|Factory|View
      */
-    public function show(string $channelSlug, Thread $thread)
+    public function show(string $channelSlug, Thread $thread, Trending $trending)
     {
         if (auth()->check()) {
             auth()->user()->read($thread);
         }
+
+        $trending->push($thread);
+
         return view('threads.show', compact('thread'));
     }
 
@@ -91,9 +110,9 @@ class ThreadController extends Controller
      * Remove the specified resource from storage.
      *
      * @param $channel
-     * @param  \App\Thread $thread
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     * @throws \Exception
+     * @param Thread $thread
+     * @return Application|ResponseFactory|RedirectResponse|Response|Redirector
+     * @throws Exception
      */
     public function destroy($channel, Thread $thread)
     {
@@ -112,7 +131,7 @@ class ThreadController extends Controller
      *
      * @param Channel $channel
      * @param ThreadFilters $filters
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function getThreads(Channel $channel, ThreadFilters $filters)
     {
