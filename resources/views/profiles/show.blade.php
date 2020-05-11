@@ -2,10 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h1 class="pb-2 mt-4 mb-2 border-bottom">
-            {{ $profileUser->name }}
-            <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
-        </h1>
+        <avatar-form :user="{{ $profileUser }}"></avatar-form>
 
         @forelse($activities as $date => $activitySet)
             <h3 class="pb-2 mt-4 mb-2 border-bottom">

@@ -44,6 +44,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread filter(ThreadFilters $filters)
  * @method static Builder|Thread whereRepliesCount($value)
  * @mixin \Eloquent
+ * @property-read int|null $subscriptions_count
  */
 class Thread extends Model
 {

@@ -8,6 +8,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Storage;
 
 /**
  * App\User
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
+ * @property string|null $avatar_path
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -38,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|User wherePassword($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
+ * @method static Builder|User whereAvatarPath($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -50,7 +53,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'avatar_path',
     ];
 
     /**
@@ -70,6 +73,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Мутатор для получения пути аватара
+     *
+     * @param string $avatar
+     * @return string
+     */
+    public function getAvatarPathAttribute($avatar)
+    {
+        return $avatar ? asset(Storage::url($avatar)) : asset('images/avatars/default.png');
+    }
 
     /**
      * Получение наименования поля для ключа в роутах

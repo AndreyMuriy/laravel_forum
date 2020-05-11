@@ -26,3 +26,6 @@ Route::delete('/replies/{reply}', 'ReplyController@destroy');
 Route::get('/profiles/{user}', 'ProfileController@show')->name('profile');
 Route::get('/profiles/{user}/notifications', 'UserNotificationController@index');
 Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationController@destroy');
+
+// API
+Route::post('api/users/{user}/avatar', 'Api\UserAvatarController@store')->middleware('auth')->name('avatar');

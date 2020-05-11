@@ -104,7 +104,6 @@ class ThreadController extends Controller
         if (request()->wantsJson()) {
             return response([], 204);
         }
-
         return redirect('/threads');
     }
 
