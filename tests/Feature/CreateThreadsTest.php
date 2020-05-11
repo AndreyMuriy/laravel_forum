@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Activity;
 use App\Thread;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
@@ -22,6 +23,18 @@ class CreateThreadsTest extends TestCase
 
         $this->get('/threads/create')
             ->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function authenticated_users_must_first_confirm_email_address_before_creating_thread()
+    {
+        $user = create('App\User', [
+            'email_verified_at' => null,
+        ]);
+
+        $this->publishThread([], $user)
+            ->assertRedirect('/threads')
+            ->assertSessionHas('flash', 'You must first confirm your email address.');
     }
 
     /** @test */
@@ -101,11 +114,12 @@ class CreateThreadsTest extends TestCase
      * Публикация потока
      *
      * @param array $overrides
+     * @param User|null $user
      * @return TestResponse
      */
-    protected function publishThread(array $overrides = []): TestResponse
+    protected function publishThread(array $overrides = [], User $user = null): TestResponse
     {
-        $this->withExceptionHandling()->signIn();
+        $this->withExceptionHandling()->signIn($user);
 
         /** @var Thread $thread */
         $thread = make(Thread::class, $overrides);
