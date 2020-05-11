@@ -15,5 +15,6 @@ $factory->define(App\Thread::class, function (Faker $faker) {
         'title' => $faker->sentence,
         'body' => $faker->paragraph,
         'replies_count' => 0,
+        'visits' => 0,
     ];
 });

@@ -63,7 +63,7 @@ class ReadThreadsTest extends TestCase
 
         $this->assertEquals([3, 2, 0], array_column($response['data'], 'replies_count'));
     }
-    
+
     /** @test */
     public function a_user_can_request_all_replies_for_a_given_thread()
     {
@@ -75,7 +75,7 @@ class ReadThreadsTest extends TestCase
         $this->assertCount(2, $response['data']);
         $this->assertEquals(2, $response['total']);
     }
-    
+
     /** @test */
     public function a_user_can_filter_threads_by_those_that_are_answered()
     {
@@ -86,5 +86,18 @@ class ReadThreadsTest extends TestCase
         $response = $this->getJson('threads?unanswered=1')->json();
 
         $this->assertCount(1, $response['data']);
+    }
+
+    /** @test */
+    public function we_record_a_new_visit_each_time_the_thread_is_read()
+    {
+        /** @var Thread $thread */
+        $thread = create('App\Thread');
+
+        $this->assertSame(0, $thread->visits);
+
+        $this->call('GET', $thread->path());
+
+        $this->assertEquals(1, $thread->fresh()->visits);
     }
 }

@@ -5,6 +5,8 @@ namespace App;
 use App\Events\ThreadReceivedNewReply;
 use App\Filters\ThreadFilters;
 use App\Traits\RecordsActivities;
+use Eloquent;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -17,34 +19,36 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $user_id
+ * @property int $channel_id
+ * @property-read int|null $replies_count
+ * @property int $visits
  * @property string $title
  * @property string $body
- * @property int $channel_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Reply[] $replies
- * @property-read int|null $replies_count
- * @property-read User $creator
- * @property-read Channel $channel
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
- * @property-read Collection|ThreadSubscription[] $subscriptions
- * @property-read int|null $subscription_count
+ * @property-read Channel $channel
+ * @property-read User $creator
  * @property-read bool $is_subscribed_to
+ * @property-read Collection|Reply[] $replies
+ * @property-read Collection|ThreadSubscription[] $subscriptions
+ * @property-read int|null $subscriptions_count
+ * @method static Builder|Thread filter(ThreadFilters $filters)
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
  * @method static Builder|Thread whereBody($value)
+ * @method static Builder|Thread whereChannelId($value)
  * @method static Builder|Thread whereCreatedAt($value)
  * @method static Builder|Thread whereId($value)
+ * @method static Builder|Thread whereRepliesCount($value)
  * @method static Builder|Thread whereTitle($value)
  * @method static Builder|Thread whereUpdatedAt($value)
  * @method static Builder|Thread whereUserId($value)
- * @method static Builder|Thread whereChannelId($value)
- * @method static Builder|Thread filter(ThreadFilters $filters)
- * @method static Builder|Thread whereRepliesCount($value)
- * @mixin \Eloquent
- * @property-read int|null $subscriptions_count
+ * @method static Builder|Thread whereVisits($value)
+ * @mixin Eloquent
+ * @mixin Builder
  */
 class Thread extends Model
 {
@@ -207,7 +211,7 @@ class Thread extends Model
      *
      * @param User $user
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function hasUpdatesFor(User $user): bool
     {

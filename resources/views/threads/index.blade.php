@@ -4,16 +4,10 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        Forum Threads
-                    </div>
+                <h3 class="h3">Forum Threads</h3>
 
-                    <div class="card-body">
-                        @include('threads._list')
-                        {{ $threads->render() }}
-                    </div>
-                </div>
+                @include('threads._list')
+                {{ $threads->render() }}
             </div>
 
             <div class="col-md-4">
