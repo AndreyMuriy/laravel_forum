@@ -18,23 +18,20 @@ class CreateThreadsTest extends TestCase
     {
         $this->withExceptionHandling();
 
-        $this->post('/threads')
-            ->assertRedirect('/login');
+        $this->post(route('threads.store'))
+            ->assertRedirect(route('login'));
 
-        $this->get('/threads/create')
-            ->assertRedirect('/login');
+        $this->get(route('threads.create'))
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function authenticated_users_must_first_confirm_email_address_before_creating_thread()
+    public function new_users_must_first_confirm_email_address_before_creating_thread()
     {
-        $user = create('App\User', [
-            'email_verified_at' => null,
-        ]);
+        $user = factory('App\User')->states('unverified')->create();
 
         $this->publishThread([], $user)
-            ->assertRedirect('/threads')
-            ->assertSessionHas('flash', 'You must first confirm your email address.');
+            ->assertRedirect(route('verification.notice'));
     }
 
     /** @test */
@@ -44,7 +41,7 @@ class CreateThreadsTest extends TestCase
 
         /** @var Thread $thread */
         $thread = make(Thread::class);
-        $response = $this->post('/threads', $thread->toArray());
+        $response = $this->post(route('threads.store', $thread->toArray()));
 
         $this->get($response->headers->get('Location'))
             ->assertSee($thread->title)
@@ -82,11 +79,11 @@ class CreateThreadsTest extends TestCase
         $thread = create('App\Thread');
         $response = $this->delete($thread->path());
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect(route('login'));
 
         $this->signIn();
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -124,6 +121,6 @@ class CreateThreadsTest extends TestCase
         /** @var Thread $thread */
         $thread = make(Thread::class, $overrides);
 
-        return $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads.store', $thread->toArray()));
     }
 }

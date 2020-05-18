@@ -8,7 +8,7 @@ up:
 	docker-compose -f docker/docker-compose.yml up -d
 
 down:
-	docker-compose -f docker/docker-compose.yml down
+	docker-compose -f docker/docker-compose.yml down --remove-orphans
 
 bash-php:
 	docker exec -it forum_php-fpm bash

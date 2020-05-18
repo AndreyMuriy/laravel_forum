@@ -2,7 +2,13 @@
 
 namespace App;
 
+use Eloquent;
+use Exception;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -24,11 +30,11 @@ use Storage;
  * @property Carbon|null $updated_at
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Thread[] $threads
+ * @property-read Collection|Thread[] $threads
  * @property-read int|null $threads_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Activity[] $activity
+ * @property-read Collection|Activity[] $activity
  * @property-read int|null $activity_count
- * @property-read \App\Reply $lastReply
+ * @property-read Reply $lastReply
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -41,9 +47,9 @@ use Storage;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereAvatarPath($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -98,7 +104,7 @@ class User extends Authenticatable
     /**
      * Реляция для потоков
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function threads()
     {
@@ -108,7 +114,7 @@ class User extends Authenticatable
     /**
      * Реляция для активностей
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activity()
     {
@@ -118,7 +124,7 @@ class User extends Authenticatable
     /**
      * Получение последнего комментария для пользователя
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function lastReply()
     {
@@ -129,7 +135,7 @@ class User extends Authenticatable
      * Запись того, что пользователь прочитал все комментарии текущего потока
      *
      * @param Thread $thread
-     * @throws \Exception
+     * @throws Exception
      */
     public function read(Thread $thread)
     {
