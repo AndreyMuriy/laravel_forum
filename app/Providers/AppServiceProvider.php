@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Channel;
+use App\Notifications\PleaseVerifyYourEmail;
 use Cache;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\ServiceProvider;
 use Validator;
 use View;
@@ -35,5 +37,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::extend('spamfree', '\App\Rules\SpamFree@passes');
+
+        VerifyEmail::toMailUsing(function ($notifiable, $verificationUrl) {
+            return (new PleaseVerifyYourEmail($verificationUrl))->toMail($notifiable);
+        });
     }
 }

@@ -3,11 +3,12 @@
 namespace Tests\Feature;
 
 use App\User;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Config;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
+use URL;
 
 class RegistrationTest extends TestCase
 {
@@ -16,8 +17,6 @@ class RegistrationTest extends TestCase
     /** @test */
     public function a_confirmation_email_is_sent_upon_registration()
     {
-        Mail::fake();
-
         $this->post('/register', [
             'name' => 'John',
             'email' => 'john@example.com',
@@ -25,11 +24,19 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'foobar11',
         ]);
 
-        $notificationUrl = new VerifyEmail();
-        $user = User::whereName('John')->first();
-        $uri = $notificationUrl->
+        /** @var Notifiable $user */
+        $user = User::where('email', '=', 'john@example.com')->first();
+        $this->assertFalse($user->hasVerifiedEmail());
 
-        $this->assertNull($user->email_verified_at);
-
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            [
+                'id' => $user->getKey(),
+                'hash' => sha1($user->getEmailForVerification()),
+            ]
+        );
+        $this->get($verificationUrl);
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
     }
 }

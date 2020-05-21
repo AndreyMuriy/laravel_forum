@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\NotifyMentionedUsers',
             'App\Listeners\NotifySubscribers',
         ],
+        'Illuminate\Auth\Events\Registered' => [
+            'Illuminate\Auth\Listeners\SendEmailVerificationNotification',
+        ],
     ];
 
     /**
