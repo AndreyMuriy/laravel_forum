@@ -3,8 +3,11 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(App\Thread::class, function (Faker $faker) {
+    $title = $faker->sentence;
+
     return [
         'user_id' => function () {
             return factory('App\User')->create()->id;
@@ -12,9 +15,10 @@ $factory->define(App\Thread::class, function (Faker $faker) {
         'channel_id' => function () {
             return factory('App\Channel')->create()->id;
         },
-        'title' => $faker->sentence,
+        'title' => $title,
         'body' => $faker->paragraph,
         'replies_count' => 0,
         'visits' => 0,
+        'slug' => Str::slug($title),
     ];
 });

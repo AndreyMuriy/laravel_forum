@@ -13,11 +13,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * App\Thread
  *
  * @property int $id
+ * @property string $slug
  * @property int $user_id
  * @property int $channel_id
  * @property-read int|null $replies_count
@@ -38,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
+ * @method static Builder|Thread whereSlug($value)
  * @method static Builder|Thread whereBody($value)
  * @method static Builder|Thread whereChannelId($value)
  * @method static Builder|Thread whereCreatedAt($value)
@@ -82,6 +85,47 @@ class Thread extends Model
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /***** MUTATORS *****/
+
+    /**
+     * Мутатор для аттрибута slug
+     *
+     * @param $value
+     */
+    public function setSlugAttribute($value)
+    {
+        if (static::whereSlug($slug = Str::slug($value))->exists()) {
+            $slug = $this->incrementSlug($slug);
+        }
+        $this->attributes['slug'] = $slug;
+    }
+
+    /**
+     * Получение порядкового номер для слага темы с одинаковым title
+     *
+     * @param string $slug
+     * @return string|string[]|null
+     */
+    protected function incrementSlug(string $slug)
+    {
+        $max = static::whereTitle($this->title)->latest('id')->value('slug');
+        if (is_numeric($max[-1])) {
+            return preg_replace_callback('/(\d+)$/', function ($matches) {
+                return $matches[1] + 1;
+            }, $max);
+        }
+
+        return "{$slug}-2";
+    }
+
+    /**
      * Получение URL для конкретного поста
      *
      * @param string|null $subPath
@@ -89,7 +133,7 @@ class Thread extends Model
      */
     public function path(string $subPath = null): string
     {
-        return '/threads/' . $this->channel->slug . '/' . $this->id . ($subPath ? '/' . $subPath : '');
+        return '/threads/' . $this->channel->slug . '/' . $this->slug . ($subPath ? '/' . $subPath : '');
     }
 
     /***** RELATIONS *****/

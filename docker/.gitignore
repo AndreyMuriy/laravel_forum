@@ -1,3 +1,4 @@
 docker-compose.yml
 services/nginx/default.conf
 services/php-fpm/php.ini
+storage/nginx/log/*
