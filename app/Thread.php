@@ -79,6 +79,10 @@ class Thread extends Model
     {
         parent::boot();
 
+        static::creating(function ($thread) {
+            $thread->slug = $thread->title;
+        });
+
         static::deleting(function (Thread $thread) {
             $thread->replies->each->delete();
         });
@@ -101,28 +105,16 @@ class Thread extends Model
      */
     public function setSlugAttribute($value)
     {
-        if (static::whereSlug($slug = Str::slug($value))->exists()) {
-            $slug = $this->incrementSlug($slug);
+        $num = 2;
+        $slug = Str::slug($value);
+        $original = $slug;
+
+        if (($exists = static::whereSlug($slug = Str::slug($value))->pluck('slug'))->count()) {
+            do {
+                $slug = "{$original}-" . $num++;
+            } while ($exists->contains($slug));
         }
         $this->attributes['slug'] = $slug;
-    }
-
-    /**
-     * Получение порядкового номер для слага темы с одинаковым title
-     *
-     * @param string $slug
-     * @return string|string[]|null
-     */
-    protected function incrementSlug(string $slug)
-    {
-        $max = static::whereTitle($this->title)->latest('id')->value('slug');
-        if (is_numeric($max[-1])) {
-            return preg_replace_callback('/(\d+)$/', function ($matches) {
-                return $matches[1] + 1;
-            }, $max);
-        }
-
-        return "{$slug}-2";
     }
 
     /**
