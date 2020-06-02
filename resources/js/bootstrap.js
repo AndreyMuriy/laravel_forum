@@ -1,10 +1,20 @@
 window._ = require('lodash');
 window.Vue = require('vue');
 
-window.Vue.prototype.authorize = function (handler) {
-    user = window.App.user;
-    return user ? handler(user) : false;
-};
+let authorizations = require('./authorizations');
+
+Vue.prototype.authorize = function (...params) {
+    console.log(params);
+    if (!window.App.signedIn) return false;
+
+    if (typeof params[0] === 'string') {
+        return authorizations[params[0]](params[1]);
+    }
+
+    return params[0](window.App.user);
+}
+
+Vue.prototype.signedIn = window.App.signedIn;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support

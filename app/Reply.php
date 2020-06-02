@@ -25,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $activities_count
  * @property-read \App\Thread $thread
  * @property-read bool $is_favorited
+ * @property-read bool $is_best
  * @method static Builder|Reply newModelQuery()
  * @method static Builder|Reply newQuery()
  * @method static Builder|Reply query()
@@ -56,7 +57,7 @@ class Reply extends Model
     /**
      * @var array
      */
-    protected $appends = ['favoritesCount', 'isFavorited'];
+    protected $appends = ['favoritesCount', 'isFavorited', 'isBest'];
 
     /**
      * @inheritdoc
@@ -86,6 +87,16 @@ class Reply extends Model
             '<a href="/profiles/$1">$0</a>',
             $body
         );
+    }
+
+    /**
+     * Аксессор isBest
+     *
+     * @return bool
+     */
+    public function getIsBestAttribute()
+    {
+        return $this->isBest();
     }
 
     /**
