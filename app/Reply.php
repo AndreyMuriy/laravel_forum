@@ -139,4 +139,14 @@ class Reply extends Model
         preg_match_all(self::PATTERN, $this->body, $matches);
         return $matches[1];
     }
+
+    /**
+     * Признак пометки как лучший ответ
+     *
+     * @return bool
+     */
+    public function isBest()
+    {
+        return $this->thread->best_reply_id == $this->id;
+    }
 }

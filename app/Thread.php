@@ -26,6 +26,7 @@ use Illuminate\Support\Str;
  * @property int $visits
  * @property string $title
  * @property string $body
+ * @property int|null $best_reply_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Activity[] $activities
@@ -40,18 +41,18 @@ use Illuminate\Support\Str;
  * @method static Builder|Thread newModelQuery()
  * @method static Builder|Thread newQuery()
  * @method static Builder|Thread query()
- * @method static Builder|Thread whereSlug($value)
+ * @method static Builder|Thread whereBestReplyId($value)
  * @method static Builder|Thread whereBody($value)
  * @method static Builder|Thread whereChannelId($value)
  * @method static Builder|Thread whereCreatedAt($value)
  * @method static Builder|Thread whereId($value)
  * @method static Builder|Thread whereRepliesCount($value)
+ * @method static Builder|Thread whereSlug($value)
  * @method static Builder|Thread whereTitle($value)
  * @method static Builder|Thread whereUpdatedAt($value)
  * @method static Builder|Thread whereUserId($value)
  * @method static Builder|Thread whereVisits($value)
  * @mixin Eloquent
- * @mixin Builder
  */
 class Thread extends Model
 {
@@ -115,6 +116,16 @@ class Thread extends Model
             } while ($exists->contains($slug));
         }
         $this->attributes['slug'] = $slug;
+    }
+
+    /**
+     * Сохранение ID лучшего комментария
+     *
+     * @param Reply $reply
+     */
+    public function markBestReply(Reply $reply)
+    {
+        $this->update(['best_reply_id' => $reply->id]);
     }
 
     /**
