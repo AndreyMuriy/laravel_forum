@@ -27,6 +27,7 @@ use Illuminate\Support\Str;
  * @property string $title
  * @property string $body
  * @property int|null $best_reply_id
+ * @property string|null $locked_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|Activity[] $activities
@@ -34,6 +35,7 @@ use Illuminate\Support\Str;
  * @property-read Channel $channel
  * @property-read User $creator
  * @property-read bool $is_subscribed_to
+ * @property-read bool $locked
  * @property-read Collection|Reply[] $replies
  * @property-read Collection|ThreadSubscription[] $subscriptions
  * @property-read int|null $subscriptions_count
@@ -46,6 +48,7 @@ use Illuminate\Support\Str;
  * @method static Builder|Thread whereChannelId($value)
  * @method static Builder|Thread whereCreatedAt($value)
  * @method static Builder|Thread whereId($value)
+ * @method static Builder|Thread whereLockedAt($value)
  * @method static Builder|Thread whereRepliesCount($value)
  * @method static Builder|Thread whereSlug($value)
  * @method static Builder|Thread whereTitle($value)
@@ -98,6 +101,16 @@ class Thread extends Model
     }
 
     /***** MUTATORS *****/
+
+    /**
+     * Признак блокировки потока
+     *
+     * @return bool
+     */
+    public function getLockedAttribute()
+    {
+        return !is_null($this->locked_at);
+    }
 
     /**
      * Мутатор для аттрибута slug
@@ -251,6 +264,14 @@ class Thread extends Model
         event(new ThreadReceivedNewReply($reply));
 
         return $reply;
+    }
+
+    /**
+     * Заблокировать поток от добавления новых ответов
+     */
+    public function lock()
+    {
+        $this->update(['locked_at' => Carbon::now()]);
     }
 
     /**

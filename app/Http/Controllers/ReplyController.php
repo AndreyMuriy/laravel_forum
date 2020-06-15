@@ -6,6 +6,13 @@ use App\Http\Requests\CreatePostRequest;
 use App\Reply;
 use App\Thread;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class ReplyController extends Controller
 {
@@ -22,7 +29,7 @@ class ReplyController extends Controller
      *
      * @param $channelId
      * @param Thread $thread
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function index($channelId, Thread $thread)
     {
@@ -35,10 +42,13 @@ class ReplyController extends Controller
      * @param string $channelSlug
      * @param Thread $thread
      * @param CreatePostRequest $request
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\RedirectResponse
+     * @return Application|ResponseFactory|Response|Reply
      */
     public function store(string $channelSlug, Thread $thread, CreatePostRequest $request)
     {
+        if ($thread->locked) {
+            return response('Thread is locked.', 422);
+        }
         return $thread->addReply([
             'user_id' => auth()->id(),
             'body' => request('body'),
@@ -49,8 +59,8 @@ class ReplyController extends Controller
      * ОБновление текста комментария
      *
      * @param Reply $reply
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function update(Reply $reply)
     {
@@ -65,7 +75,7 @@ class ReplyController extends Controller
      * Удаление комментария
      *
      * @param Reply $reply
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     * @return ResponseFactory|RedirectResponse|Response
      * @throws Exception
      */
     public function destroy(Reply $reply)
