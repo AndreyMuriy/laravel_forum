@@ -32,3 +32,9 @@ $factory->state('App\User', 'unverified', function () {
         'email_verified_at' => null,
     ];
 });
+
+$factory->state('App\User', 'administrator', function () {
+    return [
+        'name' => 'JohnDoe',
+    ];
+});

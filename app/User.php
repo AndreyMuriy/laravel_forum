@@ -155,4 +155,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return sprintf("users.%s.visits.%s", $this->id, $thread->id);
     }
+
+    /**
+     * Фэйковый признак учётной записи админа
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return in_array($this->name, ['JohnDoe', 'JaneDoe']);
+    }
 }
