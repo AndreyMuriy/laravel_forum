@@ -74,7 +74,7 @@ class Thread extends Model
     /**
      * @var array
      */
-    protected $appends = ['is_subscribed_to'];
+    protected $appends = ['is_subscribed_to', 'locked'];
 
     /**
      * @inheritdoc
@@ -264,14 +264,6 @@ class Thread extends Model
         event(new ThreadReceivedNewReply($reply));
 
         return $reply;
-    }
-
-    /**
-     * Заблокировать поток от добавления новых ответов
-     */
-    public function lock()
-    {
-        $this->update(['locked_at' => Carbon::now()]);
     }
 
     /**

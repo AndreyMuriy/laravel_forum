@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Thread;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -20,7 +21,7 @@ class LockThreadsTest extends TestCase
 
         $this->post(route('locked-threads.store', $thread))->assertStatus(403);
 
-        $this->assertFalse(!!$thread->fresh()->locked);
+        $this->assertFalse($thread->fresh()->locked);
     }
 
     /** @test */
@@ -33,7 +34,20 @@ class LockThreadsTest extends TestCase
 
         $this->post(route('locked-threads.store', $thread));
 
-        $this->assertTrue(! ! $thread->fresh()->locked, 'Failed asserting that the thread was locked.');
+        $this->assertTrue($thread->fresh()->locked, 'Failed asserting that the thread was locked.');
+    }
+
+    /** @test */
+    public function administrators_can_unlock_threads()
+    {
+        $this->signIn(factory('App\User')->state('administrator')->create());
+
+        /** @var Thread $thread */
+        $thread = create('App\Thread', ['user_id' => auth()->id(), 'locked_at' => Carbon::now()]);
+
+        $this->delete(route('locked-threads.destroy', $thread));
+
+        $this->assertFalse($thread->fresh()->locked, 'Failed asserting that the thread was unlocked.');
     }
 
     /** @test */
@@ -42,9 +56,7 @@ class LockThreadsTest extends TestCase
         $this->signIn();
 
         /** @var Thread $thread */
-        $thread = create('App\Thread');
-
-        $thread->lock();
+        $thread = create('App\Thread', ['locked_at' => Carbon::now()]);
 
         $this->post($thread->path() . '/replies', [
             'body' => 'Foobar',

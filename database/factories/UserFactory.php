@@ -35,6 +35,6 @@ $factory->state('App\User', 'unverified', function () {
 
 $factory->state('App\User', 'administrator', function () {
     return [
-        'name' => 'JohnDoe',
+        'name' => 'John Doe',
     ];
 });
