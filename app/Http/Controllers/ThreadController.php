@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Channel;
 use App\Filters\ThreadFilters;
+use App\Rules\Recaptcha;
 use App\Thread;
 use App\Trending;
 use Exception;
@@ -65,15 +66,17 @@ class ThreadController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     * @param Recaptcha $recaptcha
      * @return Application|RedirectResponse|Redirector
      * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request, Recaptcha $recaptcha)
     {
         $this->validate($request, [
             'channel_id' => 'required|exists:channels,id',
             'title' => 'required|spamfree',
             'body' => 'required|spamfree',
+            'g-recaptcha-response' => ['required', $recaptcha],
         ]);
 
         $thread = Thread::create([

@@ -1,10 +1,10 @@
 <?php
 
-Route::get('/', function () {
+Auth::routes(['verify' => true]);
+
+Route::get('/me', function () {
     return view('welcome');
 });
-
-Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
