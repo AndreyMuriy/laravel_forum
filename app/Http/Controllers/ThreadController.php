@@ -9,6 +9,7 @@ use App\Rules\Recaptcha;
 use App\Thread;
 use App\Trending;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -113,6 +114,25 @@ class ThreadController extends Controller
         $thread->increment('visits');
 
         return view('threads.show', compact('thread'));
+    }
+
+    /**
+     * Обновление канала
+     *
+     * @param Channel $channel
+     * @param Thread $thread
+     * @throws AuthorizationException
+     */
+    public function update(Channel $channel, Thread $thread)
+    {
+        $this->authorize('update', $thread);
+
+        $thread->update(request()->validate([
+            'title' => 'required',
+            'body' => 'required',
+        ]));
+
+        return $thread;
     }
 
     /**

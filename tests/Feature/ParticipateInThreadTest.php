@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Reply;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ParticipateInThreadTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function unauthenticated_users_may_not_add_replies()

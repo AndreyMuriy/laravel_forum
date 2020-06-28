@@ -9,9 +9,10 @@ Route::get('/me', function () {
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Threads
-Route::resource('/threads', 'ThreadController')->except('show');
+Route::resource('/threads', 'ThreadController')->only('index', 'create', 'destroy');
 Route::post('/threads', 'ThreadController@store')->name('threads.store')->middleware('verified');
 Route::get('/threads/{channel}', 'ThreadController@index');
+Route::patch('/threads/{channel}/{thread}', 'ThreadController@update')->name('threads.update');
 Route::post('locked-threads/{thread}', 'LockedThreadsController@store')->name('locked-threads.store')->middleware('admin');
 Route::delete('locked-threads/{thread}', 'LockedThreadsController@destroy')->name('locked-threads.destroy')->middleware('admin');
 Route::get('/threads/{channel}/{thread}', 'ThreadController@show');

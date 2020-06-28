@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\User;
 use Config;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
@@ -12,7 +12,7 @@ use URL;
 
 class RegistrationTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_confirmation_email_is_sent_upon_registration()

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class FavoritesTest extends TestCase
 {
-    use DatabaseMigrations;
-    
+    use RefreshDatabase;
+
     /** @test */
     public function an_guest_can_not_favorites_anything()
     {
@@ -16,7 +16,7 @@ class FavoritesTest extends TestCase
             ->post('/replies/1/favorites')
             ->assertRedirect('login');
     }
-    
+
     /** @test */
     public function an_authenticated_user_can_favorites_any_reply()
     {
