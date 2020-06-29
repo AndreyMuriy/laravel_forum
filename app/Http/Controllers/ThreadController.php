@@ -15,10 +15,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class ThreadController extends Controller
@@ -66,14 +64,12 @@ class ThreadController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
      * @param Recaptcha $recaptcha
      * @return Application|RedirectResponse|Redirector
-     * @throws ValidationException
      */
-    public function store(Request $request, Recaptcha $recaptcha)
+    public function store(Recaptcha $recaptcha)
     {
-        $this->validate($request, [
+        request()->validate([
             'channel_id' => 'required|exists:channels,id',
             'title' => 'required|spamfree',
             'body' => 'required|spamfree',
@@ -82,12 +78,12 @@ class ThreadController extends Controller
 
         $thread = Thread::create([
             'user_id' => auth()->id(),
-            'channel_id' => $request->get('channel_id'),
-            'title' => $request->get('title'),
-            'body' => $request->get('body'),
+            'channel_id' => request('channel_id'),
+            'title' => request('title'),
+            'body' => request('body'),
         ]);
 
-        if ($request->expectsJson()) {
+        if (request()->wantsJson()) {
             return response($thread, 201);
         }
 

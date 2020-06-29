@@ -8,8 +8,8 @@
     <thread-view :thread="{{ $thread }}" inline-template>
         <div class="container">
             <div class="row">
-                <div class="col-md-8">
-                    @include('threads.thread')
+                <div class="col-md-8" v-cloak>
+                    @include('threads._question')
 
                     <replies @added="repliesCount++" @removed="repliesCount--"></replies>
                 </div>
