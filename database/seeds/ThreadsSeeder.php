@@ -13,7 +13,7 @@ class ThreadsSeeder extends Seeder
     {
         factory('App\Channel', 2)->create()->each(function ($channel) {
             factory('App\Thread', 5)->create(['channel_id' => $channel->id])->each(function ($thread) {
-                factory('App\Reply', rand(3, 10))->create(['thread_id' => $thread->id]);
+                factory('App\Reply', rand(1, 3  ))->create(['thread_id' => $thread->id]);
             });
         });
     }

@@ -10,10 +10,12 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
+        "algolia/algoliasearch-client-php": "^2.7",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.5",
         "kitetail/zttp": "^0.6.0",
         "laravel/framework": "^6.2",
+        "laravel/scout": "^8.0",
         "laravel/tinker": "^1.0",
         "predis/predis": "^1.1"
     },

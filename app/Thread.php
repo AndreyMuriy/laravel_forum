@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Thread
@@ -59,7 +60,7 @@ use Illuminate\Support\Str;
  */
 class Thread extends Model
 {
-    use RecordsActivities;
+    use RecordsActivities, Searchable;
 
     /**
      * @var array
